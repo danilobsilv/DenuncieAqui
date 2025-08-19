@@ -1,0 +1,36 @@
+services:
+  db-mysql:
+    image: mysql:8.0
+    container_name: denuncieaqui-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASS}
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+#  denuncieaqui-api:
+#    build: .
+#    container_name: denuncieaqui-api-app
+#    restart: on-failure
+#    depends_on:
+#      db-mysql:
+#        condition: service_healthy
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql:3307/${MYSQL_DB}?useSSL=false
+#      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+#      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASS}
+#      - SERVER_PORT=8082
+
+volumes:
+  db_data:
